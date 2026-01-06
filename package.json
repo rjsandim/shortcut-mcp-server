@@ -1,0 +1,19 @@
+{
+  "name": "shortcut-mcp",
+  "version": "1.0.0",
+  "description": "MCP Server para integração com Shortcut API",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^3.22.4"
+  }
+}

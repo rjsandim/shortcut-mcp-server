@@ -247,5 +247,44 @@ export function createMcpServer() {
     }
   );
 
+  // Tool 6: Atualizar Estimativa da Story
+  server.tool(
+    "update_story_estimate",
+    "Atualiza a estimativa (em pontos) de uma story existente. Use para definir ou modificar o esforço estimado de uma tarefa.",
+    {
+      story_id: z.number().describe("ID da story a ser atualizada"),
+      estimate: z.number().describe("Estimativa em pontos escala Fibonacci (ex: 0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144)"),
+    },
+    async ({ story_id, estimate }) => {
+      try {
+        const story = await shortcutApi(`/stories/${story_id}`, {
+          method: "PUT",
+          body: JSON.stringify({
+            estimate,
+          }),
+        });
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Estimativa atualizada com sucesso!\n\nStory ID: ${story.id}\nTítulo: ${story.name}\nEstimativa: ${story.estimate} pontos\nURL: ${story.app_url || "N/A"}`,
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Erro ao atualizar estimativa: ${error.message}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    }
+  );
+
   return server;
 }

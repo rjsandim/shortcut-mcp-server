@@ -21,8 +21,9 @@ app.listen(PORT, () => {
 ║  https://sua-url-ngrok.ngrok.io/sse                          ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  Tools: list_epics, create_epic, create_story,               ║
-║         delete_story, search_stories,                        ║
-║         update_story_estimate                                ║
+║         delete_story, search_stories, get_story,             ║
+║         update_story_estimate, create_story_link,            ║
+║         update_story                                         ║
 ╚══════════════════════════════════════════════════════════════╝
 `);
 });

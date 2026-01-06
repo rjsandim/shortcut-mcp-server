@@ -243,7 +243,10 @@ export const openApiSpec = {
               "create_story",
               "delete_story",
               "search_stories",
+              "get_story",
               "update_story_estimate",
+              "create_story_link",
+              "update_story",
             ],
           },
           endpoints: {

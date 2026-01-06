@@ -217,6 +217,7 @@ export function createMcpServer() {
           workflow_state_id: story.workflow_state_id,
           created_at: story.created_at,
           app_url: story.app_url,
+          estimate: story.estimate || "Não definido"
         }));
 
         return {

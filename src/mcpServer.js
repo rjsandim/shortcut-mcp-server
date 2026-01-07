@@ -199,10 +199,10 @@ export function createMcpServer() {
     async () => {
       try {
         const response = await shortcutApi(
-          `/search?query=objective:${OBJECTIVE_ID}&page_size=250`
+          `/search/stories?query=objective:${OBJECTIVE_ID}&page_size=250`
         );
 
-        const storiesShortcut = response?.stories?.data ?? [];
+        const storiesShortcut = response?.data ?? [];
         console.log(`Encontradas ${storiesShortcut.length} stories`);
 
         const stories = storiesShortcut.map((story) => ({
@@ -448,6 +448,77 @@ export function createMcpServer() {
             {
               type: "text",
               text: `Erro ao obter detalhes da story: ${error.message}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    }
+  );
+
+  // Tool 10: Buscar Stories por Epic
+  server.tool(
+    "search_stories_by_epic",
+    "Busca TODAS as stories de um epic específico (até 250). Use quando: 1) Precisar ver todas as tarefas de um epic específico, 2) Analisar o progresso de um epic, 3) Verificar dependências entre stories do mesmo epic, 4) Planejar estimativas de um epic. IMPORTANTE: Use list_epics primeiro se não souber o epic_id. Retorna lista completa de stories com: id, nome, descrição, estimativa, estado, dependências (story_links), blocked/blocker status e URL.",
+    {
+      epic_id: z.number().describe("ID do epic para filtrar as stories"),
+    },
+    async ({ epic_id }) => {
+      try {
+        const response = await shortcutApi(
+          `/search/stories?query=epic:${epic_id}&page_size=250`
+        );
+
+        const storiesShortcut = response?.data ?? [];
+        console.log(`Encontradas ${storiesShortcut.length} stories no epic ${epic_id}`);
+
+        const stories = storiesShortcut.map((story) => ({
+          id: story.id,
+          name: story.name,
+          description: story.description
+            ? story.description.substring(0, 200) +
+              (story.description.length > 200 ? "..." : "")
+            : "(sem descrição)",
+          epic_id: story.epic_id,
+          story_type: story.story_type,
+          workflow_state_id: story.workflow_state_id,
+          created_at: story.created_at,
+          updated_at: story.updated_at,
+          app_url: story.app_url,
+          estimate: story.estimate ?? "Não definido",
+          started: story.started || false,
+          completed: story.completed || false,
+          blocked: story.blocked || false,
+          blocker: story.blocker || false,
+          story_links: story.story_links?.map(l => ({
+            id: l.id,
+            verb: l.verb,
+            object_id: l.object_id,
+            subject_id: l.subject_id,
+          })) || [],
+          tasks_count: story.tasks?.length || 0,
+          comments_count: story.stats?.num_related_documents || 0,
+        }));
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Encontradas ${stories.length} stories no Epic ${epic_id}:\n\n${JSON.stringify(
+                stories,
+                null,
+                2
+              )}`,
+            },
+          ],
+        };
+      } catch (error) {
+        console.error("Erro em search_stories_by_epic:", error);
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Erro ao buscar stories do epic: ${error.message}`,
             },
           ],
           isError: true,

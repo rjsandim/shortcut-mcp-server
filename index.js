@@ -22,8 +22,8 @@ app.listen(PORT, () => {
 ╠══════════════════════════════════════════════════════════════╣
 ║  Tools: list_epics, create_epic, create_story,               ║
 ║         delete_story, search_stories, get_story,             ║
-║         update_story_estimate, create_story_link,            ║
-║         update_story                                         ║
+║         search_stories_by_epic, update_story_estimate,       ║
+║         create_story_link, update_story                      ║
 ╚══════════════════════════════════════════════════════════════╝
 `);
 });
